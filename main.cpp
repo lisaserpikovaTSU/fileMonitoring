@@ -15,10 +15,10 @@ class nabludatel : public QObject
     Q_OBJECT
 
 public:
-    nabludatel(QString& path) { file(path); } //исправить
+    explicit nabludatel(const QString& path, QObject *parent = nullptr): QObject(parent), file(path) {}
 
 public slots:
-    void checkState(QFileInfo&);
+    void checkState();
 
 signals:
     void stateChanged();
@@ -27,16 +27,16 @@ private:
     QFileInfo file;
 };
 
-void nabludatel::checkState(QFileInfo& file) {
-    QFileInfo file2 = file;
+void nabludatel::checkState() {
+    static QFileInfo oldfile = file;
     file.refresh();
-    if (file != file2) {
-        emit stateChanged();
-    }
-}
+    if (file.exists() != oldfile.exists() ||
+        file.size() != oldfile.size()) {
 
-void nabludatel::stateChanged() {
-    cout << "File changed" << Qt::endl;
+        emit stateChanged();
+        oldfile = file;
+        cout << "State of file was changed" << Qt::endl;
+    }
 }
 
 void CheckFileState(QFileInfo& file) {
@@ -57,6 +57,16 @@ int main()
 
     nabludatel f(path);
 
+    QObject::connect(&f, &nabludatel::stateChanged, [&](){
+        cout << "signal received" << Qt::endl;
+        cout.flush();
+    });
+
+    while (true) {
+        f.checkState();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+
     /*
     QFileInfo file(path);
 
@@ -73,4 +83,5 @@ int main()
 
     return 0;
     // для проверки: /Users/liza/Desktop/hint.png
+    // C:\Users\st22.297\Downloads\qqq.txt
 }
