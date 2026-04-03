@@ -1,8 +1,7 @@
 #ifndef NABLUDATEL_H
 #define NABLUDATEL_H
 
-#include "qfileinfo.h"
-#include <QObject>
+#include "pch.h"
 
 class Nabludatel: public QObject
 {

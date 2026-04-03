@@ -1,27 +1,19 @@
+#include "pch.h"
 #include "Nabludatel.h"
-#include <QCoreApplication>
-#include <QFileInfo>
-#include <QString>
-#include <QTextStream>
-#include <QTimer>
-#include <thread>
-#include <chrono>
-#include <QObject>
-
-QTextStream cin(stdin);
-QTextStream cout(stdout);
 
 void printMes()
 {
-    cout << "State of file was changed" << Qt::endl;
+    qDebug() << "State of file was changed" << Qt::endl;
 }
 
 int main(int argc, char *argv[])
 {
+    QTextStream cin(stdin);
+
     QCoreApplication app(argc, argv);
 
     QString path;
-    cout << "Input file path: " << Qt::endl;
+    qDebug() << "Input file path: " << Qt::endl;
     path = cin.readLine();
 
     Nabludatel f;
