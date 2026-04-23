@@ -1,19 +1,32 @@
-#include <QCoreApplication>
+#include "pch.h"
+#include "Nabludatel.h"
+
+void printMes()
+{
+    qDebug() << "State of file was changed" << Qt::endl;
+}
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QTextStream cin(stdin);
 
-    // Set up code that uses the Qt event loop here.
-    // Call a.quit() or a.exit() to quit the application.
-    // A not very useful example would be including
-    // #include <QTimer>
-    // near the top of the file and calling
-    // QTimer::singleShot(5000, &a, &QCoreApplication::quit);
-    // which quits the application after 5 seconds.
+    QCoreApplication app(argc, argv);
 
-    // If you do not need a running Qt event loop, remove the call
-    // to a.exec() or use the Non-Qt Plain C++ Application template.
+    QString path;
+    qDebug() << "Input file path: " << Qt::endl;
+    path = cin.readLine();
 
-    return a.exec();
+    Nabludatel f;
+    f.setFile(path);
+
+    QObject::connect(&f, &Nabludatel::stateChanged, printMes);
+
+    while (true) {
+        f.checkFileState();
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+
+    return 0;
+    // для проверки: /Users/liza/Desktop/hint.png
+    // C:\Users\st22.297\Downloads\qqq.txt
 }
