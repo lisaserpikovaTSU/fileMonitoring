@@ -9,7 +9,7 @@ class Nabludatel: public QObject
 public:
     explicit Nabludatel(QObject *parent = nullptr);
 
-    void setFile(const QString &path);
+    void setFiles(const QString &path);
 
 signals:
     void stateChanged();
