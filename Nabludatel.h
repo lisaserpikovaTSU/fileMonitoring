@@ -15,7 +15,7 @@ signals:
     void stateChanged();
 
 public slots:
-    void checkFileState();
+    void checkFilesState();
 
 private:
     QVector<QFileInfo> files;

@@ -40,14 +40,20 @@ void Nabludatel::setFiles(const QString &path)
     files = newVector;
 }
 
-void Nabludatel::checkFileState()
+void Nabludatel::checkFilesState()
 {
-    QFileInfo oldfile = file;
-    file.refresh();
-    if (file.exists() != oldfile.exists() ||
-        file.size() != oldfile.size()) {
+    for (QFileInfo& currentFile : files) {
+        QFileInfo oldFile = currentFile;
+        currentFile.refresh();
 
-        emit stateChanged();
+        if (currentFile.exists() != oldFile.exists() ||
+            currentFile.size() != oldFile.size()) {
+
+            emit stateChanged();
+        }
+    }
+}
+
 void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
 {
     QSet<QString> oldPaths;
