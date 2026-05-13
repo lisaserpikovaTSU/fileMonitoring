@@ -48,5 +48,36 @@ void Nabludatel::checkFileState()
         file.size() != oldfile.size()) {
 
         emit stateChanged();
+void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
+{
+    QSet<QString> oldPaths;
+    for (const QFileInfo& file: files) {
+        oldPaths.insert(file.absoluteFilePath());
+    }
+
+    QSet<QString> newPaths;
+    for (const QFileInfo& file : newFiles) {
+        newPaths.insert(file.absoluteFilePath());
+    }
+
+    QSet<QString> removedFiles = oldPaths;
+    removedFiles.subtract(newPaths);
+
+    for (const QString& path : removedFiles) {
+        qDebug() << "File removed from watch: " << path << Qt::endl;
+    }
+
+    QSet<QString> addedFiles = newPaths;
+    addedFiles.subtract(oldPaths);
+
+    for (const QString& path : addedFiles) {
+        qDebug() << "Added file on watch: " << path << Qt::endl;
+        QFileInfo file(path);
+
+        if (!file.exists()) {
+            qDebug() << "   Status: file does not exist" << Qt::endl;
+        } else {
+            qDebug() << "   Status: file exist, size " << file.size() << Qt::endl;
+        }
     }
 }

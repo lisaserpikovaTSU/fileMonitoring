@@ -18,7 +18,9 @@ public slots:
     void checkFileState();
 
 private:
-    QFileInfo file;
+    QVector<QFileInfo> files;
+
+    void findChanges(const QVector<QFileInfo>& newFiles);
 };
 
 #endif // NABLUDATEL_H
