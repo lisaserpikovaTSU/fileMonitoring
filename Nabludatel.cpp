@@ -2,44 +2,7 @@
 
 Nabludatel::Nabludatel(QObject *parent) : QObject(parent){}
 
-void Nabludatel::setFiles(const QString &path)
-{
-    if (!QFile::exists(path)) {
-        qDebug() << "This file does not exist!";
-        return;
-    }
-
-    QFile sourceFile(path);
-    QVector<QFileInfo> newVector;
-
-    if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&sourceFile);
-        while (!in.atEnd()) {
-            QString path = in.readLine();
-
-            if (path.trimmed().isEmpty()) {
-                continue;
-            }
-
-            QFileInfo file(path);
-
-            if (!file.isFile()) {
-                continue;
-            }
-
-            newVector.append(file);
-        }
-        sourceFile.close();
-    } else {
-        qDebug() << "Error opening source file" << Qt::endl;
-        return;
-    }
-
-    findChanges(newVector);
-
-    files = newVector;
-}
-
+void Nabludatel::setFiles(const QVector<QFileInfo> newFiles)
 void Nabludatel::checkFilesState()
 {
     for (QFileInfo& currentFile : files) {
@@ -54,7 +17,6 @@ void Nabludatel::checkFilesState()
     }
 }
 
-void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
 {
     QSet<QString> oldPaths;
     for (const QFileInfo& file: files) {
@@ -86,4 +48,6 @@ void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
             qDebug() << "   Status: file exist, size " << file.size() << Qt::endl;
         }
     }
+
+    files = newFiles;
 }

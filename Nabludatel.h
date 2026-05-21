@@ -9,7 +9,7 @@ class Nabludatel: public QObject
 public:
     explicit Nabludatel(QObject *parent = nullptr);
 
-    void setFiles(const QString &path);
+    void setFiles(const QVector<QFileInfo> newFiles);
 
 signals:
     void stateChanged();
@@ -19,8 +19,6 @@ public slots:
 
 private:
     QVector<QFileInfo> files;
-
-    void findChanges(const QVector<QFileInfo>& newFiles);
 };
 
 #endif // NABLUDATEL_H
