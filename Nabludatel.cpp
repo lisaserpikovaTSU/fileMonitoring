@@ -3,20 +3,6 @@
 Nabludatel::Nabludatel(QObject *parent) : QObject(parent){}
 
 void Nabludatel::setFiles(const QVector<QFileInfo> newFiles)
-void Nabludatel::checkFilesState()
-{
-    for (QFileInfo& currentFile : files) {
-        QFileInfo oldFile = currentFile;
-        currentFile.refresh();
-
-        if (currentFile.exists() != oldFile.exists() ||
-            currentFile.size() != oldFile.size()) {
-
-            emit stateChanged();
-        }
-    }
-}
-
 {
     QSet<QString> oldPaths;
     for (const QFileInfo& file: files) {
@@ -50,4 +36,21 @@ void Nabludatel::checkFilesState()
     }
 
     files = newFiles;
+}
+
+void Nabludatel::checkFilesState()
+{
+    for (QFileInfo& currentFile : files) {
+        QFileInfo oldFile = currentFile;
+        currentFile.refresh();
+        if (!oldFile.exists() && currentFile.exists()) {
+            emit fileCreated(currentFile.absolutePath());
+        }
+        else if (oldFile.exists() && !currentFile.exists()) {
+            emit fileDeleted(currentFile.absolutePath());
+        }
+        else if (currentFile.size() != oldFile.size()) {
+            emit sizeChanged(currentFile.absolutePath());
+        }
+    }
 }
