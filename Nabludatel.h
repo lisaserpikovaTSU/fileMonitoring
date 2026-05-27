@@ -11,13 +11,12 @@ public:
 
     void setFiles(const QVector<QFileInfo> newFiles);
 
+    void checkFilesState();
+
 signals:
     void fileCreated(const QString& path);
     void fileDeleted(const QString& path);
     void sizeChanged(const QString& path, int oldSize, int newSize);
-
-public slots:
-    void checkFilesState();
 
 private:
     QVector<QFileInfo> files;
