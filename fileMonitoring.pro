@@ -20,5 +20,6 @@ HEADERS += \
     ilogger.h \
     itimer.h \
     pch.h \
-    Nabludatel.h
+    Nabludatel.h \
+    secondstimer.h
 
