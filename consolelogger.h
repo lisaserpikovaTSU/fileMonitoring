@@ -1,7 +1,7 @@
 #ifndef CONSOLELOGGER_H
 #define CONSOLELOGGER_H
 
-#include "ILogger.h"
+#include "ilogger.h"
 #include "pch.h"
 
 class ConsoleLogger : public ILogger {
