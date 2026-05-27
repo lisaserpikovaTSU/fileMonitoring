@@ -44,13 +44,13 @@ void Nabludatel::checkFilesState()
         QFileInfo oldFile = currentFile;
         currentFile.refresh();
         if (!oldFile.exists() && currentFile.exists()) {
-            emit fileCreated(currentFile.absolutePath());
+            emit fileCreated(currentFile.absoluteFilePath());
         }
         else if (oldFile.exists() && !currentFile.exists()) {
-            emit fileDeleted(currentFile.absolutePath());
+            emit fileDeleted(currentFile.absoluteFilePath());
         }
         else if (currentFile.size() != oldFile.size()) {
-            emit sizeChanged(currentFile.absolutePath());
+            emit sizeChanged(currentFile.absoluteFilePath(), oldSize, newSize);
         }
     }
 }
