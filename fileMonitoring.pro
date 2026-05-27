@@ -18,6 +18,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     consolelogger.h \
     ilogger.h \
+    itimer.h \
     pch.h \
-    Nabludatel.h
+    Nabludatel.h \
+    secondstimer.h
 
