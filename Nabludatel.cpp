@@ -2,59 +2,7 @@
 
 Nabludatel::Nabludatel(QObject *parent) : QObject(parent){}
 
-void Nabludatel::setFiles(const QString &path)
-{
-    if (!QFile::exists(path)) {
-        qDebug() << "This file does not exist!";
-        return;
-    }
-
-    QFile sourceFile(path);
-    QVector<QFileInfo> newVector;
-
-    if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream in(&sourceFile);
-        while (!in.atEnd()) {
-            QString path = in.readLine();
-
-            if (path.trimmed().isEmpty()) {
-                continue;
-            }
-
-            QFileInfo file(path);
-
-            if (!file.isFile()) {
-                continue;
-            }
-
-            newVector.append(file);
-        }
-        sourceFile.close();
-    } else {
-        qDebug() << "Error opening source file" << Qt::endl;
-        return;
-    }
-
-    findChanges(newVector);
-
-    files = newVector;
-}
-
-void Nabludatel::checkFilesState()
-{
-    for (QFileInfo& currentFile : files) {
-        QFileInfo oldFile = currentFile;
-        currentFile.refresh();
-
-        if (currentFile.exists() != oldFile.exists() ||
-            currentFile.size() != oldFile.size()) {
-
-            emit stateChanged();
-        }
-    }
-}
-
-void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
+void Nabludatel::setFiles(const QVector<QFileInfo> newFiles)
 {
     QSet<QString> oldPaths;
     for (const QFileInfo& file: files) {
@@ -84,6 +32,25 @@ void Nabludatel::findChanges(const QVector<QFileInfo> &newFiles)
             qDebug() << "   Status: file does not exist" << Qt::endl;
         } else {
             qDebug() << "   Status: file exist, size " << file.size() << Qt::endl;
+        }
+    }
+
+    files = newFiles;
+}
+
+void Nabludatel::checkFilesState()
+{
+    for (QFileInfo& currentFile : files) {
+        QFileInfo oldFile = currentFile;
+        currentFile.refresh();
+        if (!oldFile.exists() && currentFile.exists()) {
+            emit fileCreated(currentFile.absoluteFilePath());
+        }
+        else if (oldFile.exists() && !currentFile.exists()) {
+            emit fileDeleted(currentFile.absoluteFilePath());
+        }
+        else if (currentFile.size() != oldFile.size()) {
+            emit sizeChanged(currentFile.absoluteFilePath(), oldSize, newSize);
         }
     }
 }
