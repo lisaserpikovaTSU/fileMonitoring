@@ -1,3 +1,4 @@
+<img width="704" height="517" alt="Снимок экрана 2026-05-28 в 12 17 15" src="https://github.com/user-attachments/assets/9ce6a91e-6f3e-4e20-9adf-4e4dbaed998a" />
 # Мониторинг состояния файлов
 
 Консольное приложение на C++ с использованием Qt для отслеживания изменений файлов (создание, удаление, изменение размера).
@@ -60,7 +61,7 @@
 
 ### 2.3 Архитектура ПО (UML)
 
-<img width="409" height="571" alt="Снимок экрана 2026-05-19 в 15 03 26" src="https://github.com/user-attachments/assets/f6eac5c1-7a8c-4551-8a18-bfac90afcd8a" />
+<img width="679" height="478" alt="Снимок экрана 2026-05-28 в 12 17 36" src="https://github.com/user-attachments/assets/dcc6fbd2-2811-4fa0-8b88-e5e8cdf5ef90" />
 
 ---
 
