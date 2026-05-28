@@ -1,7 +1,6 @@
 #ifndef SECONDSTIMER_H
 #define SECONDSTIMER_H
 
-#include "ITimer.h"
 #include "itimer.h"
 #include <thread>
 #include <chrono>

@@ -1,0 +1,5 @@
+/Users/liza/fileMonitoring/tests/JSON2.txt
+
+/Users/liza/fileMonitoring/tests/JS ON1.txt
+
+/Users/liza/fileMonitoring/tests/folder
