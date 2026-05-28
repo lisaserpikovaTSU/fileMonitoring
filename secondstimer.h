@@ -5,6 +5,8 @@
 #include <thread>
 #include <chrono>
 
+//Реализация таймера с использованием std::thread
+//Приостановить поток на указанное количество секунд
 class SecondsTimer : public ITimer {
 public:
     void sleepFor(int seconds) override {

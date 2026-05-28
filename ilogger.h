@@ -3,6 +3,7 @@
 
 #include <QString>
 
+//Интерфейс для логгирования
 class ILogger {
 public:
     virtual ~ILogger() = default;

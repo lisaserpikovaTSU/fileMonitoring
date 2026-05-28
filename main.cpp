@@ -35,16 +35,19 @@
 
 QTextStream cin(stdin);
 
+//Проверка формата файла (должен быть .txt)
 bool isValidFormat(const QString& path) {
     QFileInfo fileInfo(path);
     QString suffix = fileInfo.suffix().toLower();
     return suffix == "txt";
 }
 
+//Чтение путей из файла-источника
 QVector<QFileInfo> getPaths(const QString& path) {
+    //Проверка существования файла-источника
     if (!QFile::exists(path)) {
         qDebug() << "This file does not exist!";
-        return QVector<QFileInfo>(); //Возвращаем пустой вектор
+        return QVector<QFileInfo>();
     }
 
     QFile sourceFile(path);
@@ -52,20 +55,24 @@ QVector<QFileInfo> getPaths(const QString& path) {
 
     if (sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&sourceFile);
+
         while (!in.atEnd()) {
             QString linePath = in.readLine();
 
+            //Пропускаем пустые строки
             if (linePath.trimmed().isEmpty()) {
                 continue;
             }
 
             QFileInfo file(linePath);
 
+            //Пропускаем директории
             if (file.isDir()) {
                 qDebug() << "Skipping directory (only files are supported)!" << Qt::endl;
                 continue;
             }
 
+            //Добавляем файл в список наблюдения
             newVector.append(file);
         }
         sourceFile.close();
@@ -81,27 +88,30 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
+    //Запрос пути к файлу-источнику
     qDebug() << "Enter path to source file: ";
     QString source = cin.readLine();
 
+    //Проверка существует ли файл
     if (!QFile::exists(source)) {
         qDebug() << "ERROR: Source file does not exist!";
         return 1;
     }
 
+    //Проверка формата (.txt)
     if (!isValidFormat(source)) {
         qDebug() << "ERROR: Invalid file format. Only .txt files are supported!";
         return 1;
     }
 
-    //Создаем логгер и таймер
-    ConsoleLogger logger;
-    SecondsTimer timer;
+    //Создание компонентов
+    ConsoleLogger logger;      //Логгер для вывода сообщений
+    SecondsTimer timer;        //Таймер для задержек
 
-    Nabludatel nabludatel;
+    Nabludatel nabludatel;     //Наблюдатель за файлами
     nabludatel.setFiles(getPaths(source));
 
-    //Cоединение сигналов с лямбда-функциями, использующими логгер
+    //ПОДКЛЮЧЕНИЕ СИГНАЛОВ К ЛОГГЕРУ
     QObject::connect(&nabludatel, &Nabludatel::fileCreated,
                      [&logger](const QString& path) {
                          logger.log("File created: " + path);
@@ -118,22 +128,27 @@ int main(int argc, char *argv[])
                                         .arg(path).arg(oldSize).arg(newSize));
                      });
 
+    //Информация для отслеживания изменений файла-источника
     QFileInfo sourceOfPaths(source);
     QFileInfo oldSourceOfPaths(source);
 
+    //ОСНОВНОЙ ЦИКЛ МОНИТОРИНГА
     while (true) {
+        //Проверяем, не изменился ли файл-источник
         sourceOfPaths.refresh();
         if (sourceOfPaths.lastModified() != oldSourceOfPaths.lastModified()){
+            //Файл-источник изменился - перезагружаем список файлов
             QVector<QFileInfo> newPaths = getPaths(source);
             nabludatel.setFiles(newPaths);
             oldSourceOfPaths = sourceOfPaths;
         }
 
+        //Проверяем состояние всех наблюдаемых файлов
         nabludatel.checkFilesState();
-        timer.sleepFor(2); //Используем таймер
+
+        //Пауза перед следующим циклом (2 секунды)
+        timer.sleepFor(2);
     }
 
     return 0;
 }
-
-// /Users/liza/fileMonitoring/tests/source.txt

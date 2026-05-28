@@ -1,6 +1,7 @@
 #ifndef ITIMER_H
 #define ITIMER_H
 
+//Интерфейс для таймера задержки
 class ITimer {
 public:
     virtual ~ITimer() = default;
