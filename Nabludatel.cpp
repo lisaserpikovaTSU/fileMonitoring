@@ -25,7 +25,7 @@ void Nabludatel::setFiles(const QVector<QFileInfo> newFiles)
     addedFiles.subtract(oldPaths);
 
     for (const QString& path : addedFiles) {
-        qDebug() << "Added file on watch: " << path << Qt::endl;
+        qDebug() << "Added file on watch: " << path;
         QFileInfo file(path);
 
         if (!file.exists()) {
@@ -50,7 +50,7 @@ void Nabludatel::checkFilesState()
             emit fileDeleted(currentFile.absoluteFilePath());
         }
         else if (currentFile.size() != oldFile.size()) {
-            emit sizeChanged(currentFile.absoluteFilePath(), oldSize, newSize);
+            emit sizeChanged(currentFile.absoluteFilePath(), oldFile.size(), currentFile.size());
         }
     }
 }
